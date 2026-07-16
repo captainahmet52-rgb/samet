@@ -13,4 +13,13 @@ describe("getRuntimeDatabaseUrl", () => {
     const input = "postgresql://user:secret@localhost:5432/app";
     expect(getRuntimeDatabaseUrl(input)).toBe(input);
   });
+
+  it("geçersiz direct-host 6543 adresini DIRECT_URL pooler hostuyla düzeltir", () => {
+    const runtime = "postgresql://postgres:secret@db.ref.supabase.co:6543/postgres";
+    const migration = "postgresql://postgres.ref:secret@aws-0-us-east-1.pooler.supabase.com:5432/postgres";
+    const result = getRuntimeDatabaseUrl(runtime, migration);
+    expect(result).toContain("aws-0-us-east-1.pooler.supabase.com:6543/postgres");
+    expect(result).toContain("pgbouncer=true");
+    expect(result).toContain("connection_limit=1");
+  });
 });
