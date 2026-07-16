@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Urun {
+  id          String        @id @default(cuid())
+  ad          String
+  birim       String
+  kritikStok  Int           @default(0)
+  mevcutStok  Int           @default(0)
+  hareketler  StokHareket[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model StokHareket {
+  id          String       @id @default(cuid())
+  urun        Urun         @relation(fields: [urunId], references: [id], onDelete: Restrict)
+  urunId      String
+  tip         HareketTipi
+  miktar      Int
+  birimFiyat  Decimal      @db.Decimal(10, 2)
+  toplam      Decimal      @db.Decimal(10, 2)
+  aciklama    String?
+  tarih       DateTime     @default(now())
+  createdAt   DateTime     @default(now())
+
+  @@index([urunId])
+  @@index([tarih])
+  @@index([tip])
+}
+
+enum HareketTipi {
+  GIRIS
+  CIKIS
+}
