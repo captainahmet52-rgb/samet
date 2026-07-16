@@ -16,7 +16,16 @@ export function UrunForm({ urun, trigger }: { urun?: Product; trigger?: React.Re
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault(); setPending(true);
     const form = new FormData(event.currentTarget);
-    const input = { ad: form.get("ad"), birim: form.get("birim"), kritikStok: form.get("kritikStok") };
+    const input = urun
+      ? { ad: form.get("ad"), birim: form.get("birim"), kritikStok: form.get("kritikStok") }
+      : {
+          ad: form.get("ad"),
+          birim: form.get("birim"),
+          kritikStok: form.get("kritikStok"),
+          ilkMiktar: form.get("ilkMiktar"),
+          birimFiyat: form.get("birimFiyat"),
+          gelisTarihi: `${form.get("gelisTarihi")}T12:00:00`,
+        };
     const result = urun ? await urunGuncelle(urun.id, input) : await urunEkle(input);
     setPending(false);
     if (result.ok) {
@@ -26,6 +35,8 @@ export function UrunForm({ urun, trigger }: { urun?: Product; trigger?: React.Re
       toast.error(result.message);
     }
   }
+  const bugun = new Date();
+  bugun.setMinutes(bugun.getMinutes() - bugun.getTimezoneOffset());
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{trigger ?? <Button>Yeni Ürün Ekle</Button>}</DialogTrigger>
@@ -34,6 +45,11 @@ export function UrunForm({ urun, trigger }: { urun?: Product; trigger?: React.Re
           <div className="space-y-1.5"><Label htmlFor={`ad-${urun?.id ?? "new"}`}>Ürün adı</Label><Input id={`ad-${urun?.id ?? "new"}`} name="ad" defaultValue={urun?.ad} required /></div>
           <div className="space-y-1.5"><Label htmlFor={`birim-${urun?.id ?? "new"}`}>Birim</Label><Input id={`birim-${urun?.id ?? "new"}`} name="birim" defaultValue={urun?.birim} placeholder="adet, litre, koli…" required /></div>
           <div className="space-y-1.5"><Label htmlFor={`kritik-${urun?.id ?? "new"}`}>Kritik stok</Label><Input id={`kritik-${urun?.id ?? "new"}`} name="kritikStok" type="number" min="0" defaultValue={urun?.kritikStok ?? 0} required /></div>
+          {!urun && <>
+            <div className="space-y-1.5"><Label htmlFor="ilkMiktar">İlk giriş miktarı</Label><Input id="ilkMiktar" name="ilkMiktar" type="number" min="1" required /></div>
+            <div className="space-y-1.5"><Label htmlFor="birimFiyat">Birim fiyat (₺)</Label><Input id="birimFiyat" name="birimFiyat" type="number" min="0" step="0.01" required /></div>
+            <div className="space-y-1.5"><Label htmlFor="gelisTarihi">Geliş tarihi</Label><Input id="gelisTarihi" name="gelisTarihi" type="date" defaultValue={bugun.toISOString().slice(0, 10)} required /></div>
+          </>}
           <Button className="w-full" disabled={pending}>{pending ? "Kaydediliyor…" : "Kaydet"}</Button>
         </form>
       </DialogContent>
