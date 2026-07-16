@@ -23,13 +23,13 @@ export function Nav({ authEnabled }: { authEnabled: boolean }) {
   }
   return (
     <>
-      <div className="border-b bg-emerald-950 px-4 py-4 text-white md:border-b-0 md:border-r">
+      <div className="border-b bg-emerald-950 px-4 py-4 text-white md:col-start-1 md:row-start-1 md:border-b-0 md:border-r">
         <div className="mx-auto flex max-w-7xl items-center justify-between md:block">
           <div><p className="font-bold">Temizlik Deposu</p><p className="text-xs text-emerald-300">Stok Yönetimi</p></div>
           <Button aria-label="Çıkış yap" className="md:hidden" size="icon" variant="ghost" onClick={logout}><LogOut className="size-4" /></Button>
         </div>
       </div>
-      <aside className="hidden border-r bg-white p-3 md:flex md:flex-col">
+      <aside className="hidden border-r bg-white p-3 md:col-start-1 md:row-start-2 md:flex md:flex-col">
         <nav className="space-y-1">
           {links.map(({ href, label, icon: Icon }) => (
             <Link key={href} href={href} className={cn("flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium", pathname === href ? "bg-emerald-50 text-emerald-800" : "text-slate-600 hover:bg-slate-50")}>
