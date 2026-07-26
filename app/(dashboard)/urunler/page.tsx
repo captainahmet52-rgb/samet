@@ -11,7 +11,7 @@ export default async function UrunlerPage({ searchParams }: { searchParams: Prom
   const params = await searchParams;
   const sadeceKritik = params.durum === "kritik";
   const configured = isDatabaseConfigured();
-  const urunler = configured ? await prisma.urun.findMany({ orderBy: { ad: "asc" }, select: { id: true, ad: true, birim: true, mevcutStok: true, kritikStok: true, fiyat: true } }) : [];
+  const urunler = configured ? await prisma.urun.findMany({ orderBy: { ad: "asc" }, select: { id: true, ad: true, birim: true, mevcutStok: true, kritikStok: true, fiyat: true, barkod: true } }) : [];
   const rows = urunler
     .filter(u => !sadeceKritik || u.mevcutStok <= u.kritikStok)
     .map(u => ({ ...u, fiyat: u.fiyat.toNumber() }));

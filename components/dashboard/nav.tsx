@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BarChart3, Boxes, LayoutDashboard, LogOut, PackagePlus } from "lucide-react";
+import { BarChart3, Boxes, LayoutDashboard, LogOut, PackagePlus, ScanBarcode } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -12,6 +12,7 @@ const links = [
   { href: "/", label: "Genel Bakış", icon: LayoutDashboard },
   { href: "/urunler", label: "Ürünler", icon: Boxes },
   { href: "/hareketler", label: "Stok Hareketleri", icon: PackagePlus },
+  { href: "/barkod", label: "Barkod", icon: ScanBarcode },
   { href: "/rapor", label: "Raporlar", icon: BarChart3 },
 ];
 
@@ -39,7 +40,7 @@ export function Nav({ authEnabled }: { authEnabled: boolean }) {
         </nav>
         <Button className="mt-auto justify-start" variant="ghost" onClick={logout}><LogOut className="size-4" />Çıkış yap</Button>
       </aside>
-      <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-4 border-t bg-white p-1 md:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t bg-white p-1 md:hidden">
         {links.map(({ href, label, icon: Icon }) => <Link key={href} href={href} className={cn("flex flex-col items-center gap-1 rounded-md py-2 text-[10px]", pathname === href && "bg-emerald-50 text-emerald-800")}><Icon className="size-5" />{label}</Link>)}
       </nav>
     </>

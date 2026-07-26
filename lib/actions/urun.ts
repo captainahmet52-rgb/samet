@@ -14,6 +14,13 @@ function ensureDatabase() {
   if (!isDatabaseConfigured()) throw new Error("Veritabanı bağlantısı yapılandırılmamış.");
 }
 
+function hataMesaji(error: unknown, fallback: string) {
+  if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+    return "Bu barkod zaten başka bir üründe kayıtlı.";
+  }
+  return error instanceof Error ? error.message : fallback;
+}
+
 export async function urunEkle(input: unknown): Promise<ActionResult> {
   try {
     await requireAdmin(); ensureDatabase();
@@ -36,7 +43,7 @@ export async function urunEkle(input: unknown): Promise<ActionResult> {
     });
     revalidatePath("/urunler"); revalidatePath("/hareketler"); revalidatePath("/"); revalidatePath("/rapor");
     return { ok: true, message: "Ürün ve ilk stok girişi kaydedildi." };
-  } catch (error) { return { ok: false, message: error instanceof Error ? error.message : "Ürün eklenemedi." }; }
+  } catch (error) { return { ok: false, message: hataMesaji(error, "Ürün eklenemedi.") }; }
 }
 
 export async function urunGuncelle(id: string, input: unknown): Promise<ActionResult> {
@@ -46,7 +53,7 @@ export async function urunGuncelle(id: string, input: unknown): Promise<ActionRe
     await prisma.urun.update({ where: { id }, data });
     revalidatePath("/urunler"); revalidatePath("/");
     return { ok: true, message: "Ürün güncellendi." };
-  } catch (error) { return { ok: false, message: error instanceof Error ? error.message : "Ürün güncellenemedi." }; }
+  } catch (error) { return { ok: false, message: hataMesaji(error, "Ürün güncellenemedi.") }; }
 }
 
 export async function urunSil(id: string): Promise<ActionResult> {

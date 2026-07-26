@@ -15,6 +15,7 @@ model Urun {
   kritikStok  Int           @default(0)
   mevcutStok  Int           @default(0)
   fiyat       Decimal       @default(0) @db.Decimal(10, 2)
+  barkod      String?       @unique
   hareketler  StokHareket[]
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt

@@ -3,7 +3,12 @@ import { urunSchema, yeniUrunSchema } from "./urun";
 
 describe("urunSchema", () => {
   it("geçerli ürün bilgisini kabul eder", () => {
-    expect(urunSchema.parse({ ad: "Yüzey Temizleyici", birim: "litre", kritikStok: "5", fiyat: "125.50" })).toEqual({ ad: "Yüzey Temizleyici", birim: "litre", kritikStok: 5, fiyat: 125.5 });
+    expect(urunSchema.parse({ ad: "Yüzey Temizleyici", birim: "litre", kritikStok: "5", fiyat: "125.50" })).toEqual({ ad: "Yüzey Temizleyici", birim: "litre", kritikStok: 5, fiyat: 125.5, barkod: null });
+  });
+
+  it("boş barkodu null yapar, doluyu korur", () => {
+    expect(urunSchema.parse({ ad: "Sabun", birim: "adet", kritikStok: 1, fiyat: 10, barkod: "" }).barkod).toBe(null);
+    expect(urunSchema.parse({ ad: "Sabun", birim: "adet", kritikStok: 1, fiyat: 10, barkod: " 8690000000001 " }).barkod).toBe("8690000000001");
   });
 
   it("negatif kritik stoku reddeder", () => {

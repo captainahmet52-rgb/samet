@@ -27,7 +27,8 @@ export async function hareketEkle(input: unknown): Promise<ActionResult> {
         const updated = await tx.urun.updateMany({ where: { id: data.urunId, mevcutStok: { gte: data.miktar } }, data: { mevcutStok: { decrement: data.miktar } } });
         if (updated.count !== 1) throw new Error("Stok yetersiz veya ürün bulunamadı.");
       } else {
-        const urun = await tx.urun.update({ where: { id: data.urunId }, data: { mevcutStok: { increment: data.miktar } } });
+        // Girişte ürün kartındaki fiyat son alış fiyatına güncellenir.
+        const urun = await tx.urun.update({ where: { id: data.urunId }, data: { mevcutStok: { increment: data.miktar }, fiyat: new Prisma.Decimal(data.birimFiyat.toFixed(2)) } });
         if (!urun) throw new Error("Ürün bulunamadı.");
       }
       await tx.stokHareket.create({ data: { ...data, birimFiyat: new Prisma.Decimal(data.birimFiyat.toFixed(2)), toplam } });

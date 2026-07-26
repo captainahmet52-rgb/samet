@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { urunEkle, urunGuncelle } from "@/lib/actions/urun";
 
-type Product = { id: string; ad: string; birim: string; kritikStok: number; fiyat: number };
+type Product = { id: string; ad: string; birim: string; kritikStok: number; fiyat: number; barkod: string | null };
 
 export function UrunForm({ urun, trigger }: { urun?: Product; trigger?: React.ReactNode }) {
   const [open, setOpen] = useState(false); const [pending, setPending] = useState(false);
@@ -17,11 +17,12 @@ export function UrunForm({ urun, trigger }: { urun?: Product; trigger?: React.Re
     event.preventDefault(); setPending(true);
     const form = new FormData(event.currentTarget);
     const input = urun
-      ? { ad: form.get("urunAdi"), birim: form.get("birim"), kritikStok: form.get("kritikStok"), fiyat: form.get("fiyat") }
+      ? { ad: form.get("urunAdi"), birim: form.get("birim"), kritikStok: form.get("kritikStok"), fiyat: form.get("fiyat"), barkod: form.get("barkod") }
       : {
           ad: form.get("urunAdi"),
           birim: form.get("birim"),
           kritikStok: form.get("kritikStok"),
+          barkod: form.get("barkod"),
           ilkMiktar: form.get("ilkMiktar"),
           birimFiyat: form.get("birimFiyat"),
           gelisTarihi: `${form.get("gelisTarihi")}T12:00:00`,
@@ -44,6 +45,7 @@ export function UrunForm({ urun, trigger }: { urun?: Product; trigger?: React.Re
         <form className="space-y-4" onSubmit={submit}>
           <div className="space-y-1.5"><Label htmlFor={`urun-adi-${urun?.id ?? "new"}`}>Ürün adı</Label><Input id={`urun-adi-${urun?.id ?? "new"}`} name="urunAdi" defaultValue={urun?.ad} required /></div>
           <div className="space-y-1.5"><Label htmlFor={`birim-${urun?.id ?? "new"}`}>Birim</Label><Input id={`birim-${urun?.id ?? "new"}`} name="birim" defaultValue={urun?.birim} placeholder="adet, litre, koli…" required /></div>
+          <div className="space-y-1.5"><Label htmlFor={`barkod-${urun?.id ?? "new"}`}>Barkod (isteğe bağlı)</Label><Input id={`barkod-${urun?.id ?? "new"}`} name="barkod" inputMode="numeric" defaultValue={urun?.barkod ?? ""} placeholder="Barkod numarası" /></div>
           <div className="space-y-1.5"><Label htmlFor={`kritik-${urun?.id ?? "new"}`}>Kritik stok</Label><Input id={`kritik-${urun?.id ?? "new"}`} name="kritikStok" type="number" min="0" defaultValue={urun?.kritikStok ?? 0} required /></div>
           {urun && <div className="space-y-1.5"><Label htmlFor={`fiyat-${urun.id}`}>Fiyat (₺)</Label><Input id={`fiyat-${urun.id}`} name="fiyat" type="number" min="0" step="0.01" defaultValue={urun.fiyat} required /></div>}
           {!urun && <>

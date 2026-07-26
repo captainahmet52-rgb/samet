@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { urunSil } from "@/lib/actions/urun";
 import { paraFormat } from "@/lib/utils";
 
-export type UrunRow = { id: string; ad: string; birim: string; mevcutStok: number; kritikStok: number; fiyat: number };
+export type UrunRow = { id: string; ad: string; birim: string; mevcutStok: number; kritikStok: number; fiyat: number; barkod: string | null };
 
 function Actions({ urun }: { urun: UrunRow }) {
   const [pending, setPending] = useState(false);
