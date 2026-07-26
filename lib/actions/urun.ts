@@ -18,9 +18,10 @@ export async function urunEkle(input: unknown): Promise<ActionResult> {
   try {
     await requireAdmin(); ensureDatabase();
     const { ilkMiktar, birimFiyat, gelisTarihi, ...urunData } = yeniUrunSchema.parse(input);
+    // Ürün kartındaki fiyat, ilk giriş hareketinin birim fiyatından başlar.
     const fiyat = new Prisma.Decimal(birimFiyat.toFixed(2));
     await prisma.$transaction(async tx => {
-      const urun = await tx.urun.create({ data: { ...urunData, mevcutStok: ilkMiktar } });
+      const urun = await tx.urun.create({ data: { ...urunData, mevcutStok: ilkMiktar, fiyat } });
       await tx.stokHareket.create({
         data: {
           urunId: urun.id,

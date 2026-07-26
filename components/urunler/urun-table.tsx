@@ -9,8 +9,9 @@ import { DataTable } from "@/components/data-table/data-table";
 import { UrunForm } from "@/components/urunler/urun-form";
 import { Button } from "@/components/ui/button";
 import { urunSil } from "@/lib/actions/urun";
+import { paraFormat } from "@/lib/utils";
 
-export type UrunRow = { id: string; ad: string; birim: string; mevcutStok: number; kritikStok: number };
+export type UrunRow = { id: string; ad: string; birim: string; mevcutStok: number; kritikStok: number; fiyat: number };
 
 function Actions({ urun }: { urun: UrunRow }) {
   const [pending, setPending] = useState(false);
@@ -27,9 +28,9 @@ export const columns: ColumnDef<UrunRow>[] = [
   { accessorKey: "ad", header: ({ column }) => <button className="flex items-center gap-1" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>Ürün <ArrowUpDown className="size-3"/></button> },
   { accessorKey: "birim", header: "Birim" },
   { accessorKey: "mevcutStok", header: "Mevcut Stok", cell: ({ row }) => <span className="font-semibold">{row.original.mevcutStok} {row.original.birim}</span> },
-  { accessorKey: "kritikStok", header: "Kritik Stok" },
+  { accessorKey: "fiyat", header: "Fiyat", cell: ({ row }) => paraFormat.format(row.original.fiyat) },
   { id: "durum", header: "Durum", cell: ({ row }) => row.original.mevcutStok <= row.original.kritikStok ? <span className="rounded-full bg-red-100 px-2 py-1 text-xs font-semibold text-red-800">Kritik</span> : <span className="rounded-full bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-800">Yeterli</span> },
   { id: "actions", cell: ({ row }) => <Actions urun={row.original}/> },
 ];
 
-export function UrunTable({ data }: { data: UrunRow[] }) { return <DataTable columns={columns} data={data} emptyText="Henüz ürün eklenmedi."/>; }
+export function UrunTable({ data, emptyText }: { data: UrunRow[]; emptyText?: string }) { return <DataTable columns={columns} data={data} emptyText={emptyText ?? "Henüz ürün eklenmedi."}/>; }
