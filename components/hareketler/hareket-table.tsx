@@ -25,7 +25,7 @@ function DeleteAction({ hareket }: { hareket: HareketRow }) {
 export const hareketColumns: ColumnDef<HareketRow>[] = [
   { accessorKey: "tarih", header: "Tarih", cell: ({ row }) => tarihFormat.format(new Date(row.original.tarih)) },
   { accessorKey: "urun", header: "Ürün" },
-  { accessorKey: "tip", header: "Tip", cell: ({ row }) => <span className={row.original.tip === "GIRIS" ? "rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800" : "rounded-full bg-orange-100 px-2 py-1 text-xs font-semibold text-orange-800"}>{row.original.tip === "GIRIS" ? "Giriş" : "Çıkış"}</span> },
+  { accessorKey: "tip", header: "Tip", cell: ({ row }) => <span className={row.original.tip === "GIRIS" ? "rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800" : "rounded-full bg-orange-100 px-2 py-1 text-xs font-semibold text-orange-800"}>{row.original.tip === "GIRIS" ? "Giren ürün" : "Çıkan ürün"}</span> },
   { accessorKey: "miktar", header: "Miktar", cell: ({ row }) => `${row.original.miktar} ${row.original.birim}` },
   { accessorKey: "birimFiyat", header: "Birim Fiyat", cell: ({ row }) => paraFormat.format(row.original.birimFiyat) },
   { accessorKey: "toplam", header: "Toplam", cell: ({ row }) => <span className="font-semibold">{paraFormat.format(row.original.toplam)}</span> },

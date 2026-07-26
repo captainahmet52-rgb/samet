@@ -22,7 +22,7 @@ export function HareketForm({ urunler }: { urunler: UrunOption[] }) {
     else toast.error(result.message);
   }
   const now = new Date(); now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-  return <Dialog open={open} onOpenChange={setOpen}><DialogTrigger asChild><Button disabled={!urunler.length}>Yeni Hareket</Button></DialogTrigger><DialogContent><DialogHeader><DialogTitle>Yeni stok hareketi</DialogTitle><DialogDescription>Giriş depoyu artırır, çıkış depoyu azaltır.</DialogDescription></DialogHeader>
+  return <Dialog open={open} onOpenChange={setOpen}><DialogTrigger asChild><Button disabled={!urunler.length}>Yeni Hareket</Button></DialogTrigger><DialogContent><DialogHeader><DialogTitle>Yeni stok hareketi</DialogTitle><DialogDescription>Giren ürün depoyu artırır, çıkan ürün depoyu azaltır.</DialogDescription></DialogHeader>
     <form className="grid gap-4 sm:grid-cols-2" onSubmit={submit}>
       <div className="space-y-1.5 sm:col-span-2"><Label htmlFor="urunId">Ürün</Label><select id="urunId" name="urunId" className="h-10 w-full rounded-lg border bg-white px-3 text-sm" required defaultValue=""><option value="" disabled>Ürün seçin</option>{urunler.map(u => <option key={u.id} value={u.id}>{u.ad} — {u.mevcutStok} {u.birim}</option>)}</select></div>
       <div className="space-y-1.5"><Label htmlFor="tip">Hareket tipi</Label><select id="tip" name="tip" className="h-10 w-full rounded-lg border bg-white px-3 text-sm"><option value="GIRIS">Giren ürün</option><option value="CIKIS">Çıkan ürün</option></select></div>
